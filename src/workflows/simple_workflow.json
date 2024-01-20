@@ -1,0 +1,7 @@
+{
+    "id": "simple_workflow",
+    "tasks": [
+        { "id": "task1", "type": "log", "message": "Starting workflow..." },
+        { "id": "task2", "type": "log", "message": "Workflow completed!" }
+    ]
+}
