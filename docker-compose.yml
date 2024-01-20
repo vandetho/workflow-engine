@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+    mongodb:
+        container_name: mongodb
+        image: mongo:latest
+        env_file:
+            - .env
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongodb_data_container:/data/db
+        networks:
+            - nestjs-network
+        restart: always
+
+    dev:
+        container_name: tembre_backend_dev
+        image: tembre-backend-dev:1.0.0
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        command: npm run start:dev
+        ports:
+            - ${PORT}:${PORT}
+        networks:
+            - nestjs-network
+        depends_on:
+            - mongodb
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+
+#    prod:
+#        container_name: tembre_backend_prod
+#        image: tembre-backend-prod:1.0.0
+#        build:
+#            context: .
+#            dockerfile: ./Dockerfile
+#        command: npm run start:prod
+#        ports:
+#            - ${PORT}:${PORT}
+#        networks:
+#            - nestjs-network
+#        depends_on:
+#            - mongodb
+#        volumes:
+#            - .:/usr/src/app
+#            - /usr/src/app/node_modules
+#        restart: unless-stopped
+
+volumes:
+    mongodb_data_container:
+
+networks:
+    nestjs-network:
+        driver: bridge
